@@ -1,0 +1,100 @@
+Problem Statement:
+  Write a program to find semantic tokens in a given string.
+  A token is defined here is the unique words which add meaning to the text.
+  except the following words from semantic words: "a", "i", "an", "the", "am", "you", "why", "what", "when", "to", "how", "is" ;
+  also except the appropriate punctutions.
+
+Test Cases:
+  #1
+   Java is great. Grails is also great
+  output: Java great Grails also
+
+  #2
+    I am god!
+  output: god
+
+Solution in java:
+  import java.util.*;
+
+  public class UniqueWordFinder {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine();
+        scanner.close();
+
+        String[] words = input.split("[\\W]+");
+
+        Map<String, Integer> wordCountMap = new HashMap<>();
+        for (String word : words) {
+            if (!word.isEmpty()) { // Exclude empty strings
+                String lowerCaseWord = word.toLowerCase();
+                wordCountMap.put(lowerCaseWord, wordCountMap.getOrDefault(lowerCaseWord, 0) + 1);
+            }
+        }
+        List<String> grammar = Arrays.asList("a", "i", "an", "the", "am", "you", "why", "what", "when", "to", "how", "is");
+        for (String word : wordCountMap.keySet()) {
+            if ( !grammar.contains(word)) {
+                System.out.println(word);
+            }
+        }
+    }
+}
+
+
+Solution in C++:
+  #include <iostream>
+#include <unordered_map>
+#include <vector>
+#include <sstream>
+#include <algorithm>
+
+using namespace std;
+
+class UniqueWordFinder {
+public:
+    void findUniqueWords() {
+        string input;
+        getline(cin, input);
+
+        stringstream ss(input);
+        vector<string> words;
+        string word;
+        while (ss >> word) {
+            string cleanedWord = cleanWord(word); // Remove punctuation and convert to lowercase
+            if (!cleanedWord.empty()) {
+                words.push_back(cleanedWord);
+            }
+        }
+
+        unordered_map<string, int> wordCountMap;
+        for (const string& w : words) {
+            wordCountMap[w]++;
+        }
+
+        vector<string> grammar = {"a", "i", "an", "the", "am", "you", "why", "what", "when", "to", "how", "is"};
+
+        for (const auto& pair : wordCountMap) {
+            if (find(grammar.begin(), grammar.end(), pair.first) == grammar.end()) {
+                cout << pair.first << endl;
+            }
+        }
+    }
+
+private:
+    string cleanWord(const string& word) {
+        string cleanedWord;
+        for (char c : word) {
+            if (isalpha(c)) {
+                cleanedWord += tolower(c); 
+}
+        }
+        return cleanedWord;
+    }
+};
+
+int main() {
+    UniqueWordFinder uniqueWordFinder;
+    uniqueWordFinder.findUniqueWords();
+    return 0;
+}
